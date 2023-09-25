@@ -1,1 +1,1 @@
-# AR Project
+# QR Code Scanning Project
