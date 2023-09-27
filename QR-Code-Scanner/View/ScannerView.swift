@@ -18,6 +18,11 @@ struct ScannerView: View {
     ///Error Properties
     @State private var errorMessage: String = ""
     @State private var showError: Bool = false
+    @Environment(\.openURL) private var openURL
+    ///Camera QR Output Delegate
+    @StateObject private var qrDelegate = QRScannerDelegate()
+    ///Scanned Code
+    @State private var scannedCode: String = ""
     
     var body: some View {
         VStack(spacing: 8) {
@@ -46,7 +51,9 @@ struct ScannerView: View {
                 let size = $0.size
                 
                 ZStack {
-                    CameraView(frameSize: size, session: $session)
+                    CameraView(frameSize: CGSize(width: size.width, height: size.width), session: $session)
+                    //Making it Little Smaller
+                        .scaleEffect(0.97)
                     
                     ForEach(0...4, id: \.self) { index in
                         let rotation = Double(index) * 90
@@ -77,7 +84,10 @@ struct ScannerView: View {
             Spacer(minLength: 15)
             
             Button {
-                
+                if !session.isRunning && cameraPermission == .approved {
+                    reactivateCamera()
+                    activateScannerAnimation()
+                }
             } label: {
                 Image(systemName: "qrcode.viewfinder")
                     .font(.largeTitle)
@@ -90,7 +100,38 @@ struct ScannerView: View {
         ///Checking Camera Permission, when the View is Visible
         .onAppear(perform: checkCameraPermission)
         .alert(errorMessage, isPresented: $showError) {
-            
+            ///Showing Setting's Button, if permission is denied
+            if cameraPermission == .denied {
+                Button("Settings") {
+                    let settingsString = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: settingsString) {
+                        ///Opening App's Setting, Using openURL SwiftUI API
+                        openURL(settingsURL)
+                    }
+                }
+                
+                ///Along with Cancel Button
+                Button("Cancel", role: .cancel) {
+                    
+                }
+            }
+        }
+        .onChange(of: qrDelegate.scannedCode) { newValue in
+            if let code = newValue {
+                scannedCode = code
+                ///When the First Code Scan is Available, immediately stop the Camera
+                session.stopRunning()
+                ///Stopping Scanner Animation
+                deActivateScannerAnimation()
+                ///Clearing the Data on Delegate
+                qrDelegate.scannedCode = nil
+            }
+        }
+    }
+    ///
+    func reactivateCamera() {
+        DispatchQueue.global(qos: .background).async {
+            session.startRunning()
         }
     }
     
@@ -102,28 +143,90 @@ struct ScannerView: View {
         }
     }
     
+    ///De-Activating Scanning Animation Method
+    func deActivateScannerAnimation() {
+        //Adding Delay for Each Reversal
+        withAnimation(.easeInOut(duration: 0.85)) {
+            isScanning = false
+        }
+    }
+    
     ///Checking Camera Permission
     func checkCameraPermission() {
         Task {
             switch AVCaptureDevice.authorizationStatus(for: .video) {
             case .authorized:
                 cameraPermission = .approved
+                if session.inputs.isEmpty {
+                    //New Setup
+                    setupCamera()
+                } else {
+                    ///Already Existing One
+                    session.startRunning()
+                }
             case .notDetermined:
                 ///Requesting Camera Access
                 if await AVCaptureDevice.requestAccess(for: .video) {
                     ///Permission Granted
                     cameraPermission = .approved
+                    setupCamera()
                 } else {
                     ///Permission Denied
                     cameraPermission = .denied
+                    ///Presenting Error Message
+                    presentError("Please Provide Access to Camera for Scanning Codes")
                 }
             case .denied, .restricted:
                 cameraPermission = .denied
+                presentError("Please Provide Access to Camera for Scanning Codes")
             default: break
                 
             }
         }
     }
+    ///Setting Up Camera
+    func setupCamera() {
+        do {
+            ///Finding Back Camera
+            guard let device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .back).devices.first else {
+                presentError("Unknown Device Error")
+                return
+            }
+            
+            ///Camera Input
+            let input = try AVCaptureDeviceInput(device: device)
+            ///For Extra Safety
+            ///Checking Whether Input & Output Can Be Added to the Session
+            guard session.canAddInput(input), session.canAddOutput(qrOutput) else {
+                presentError("Unknown Input/Output Error")
+                return
+            }
+            
+            ///Adding Input & Output to Camera Session
+            session.beginConfiguration()
+            session.addInput(input)
+            session.addOutput(qrOutput)
+            ///Setting Output Config to Read QR Codes
+            qrOutput.metadataObjectTypes = [.qr]
+            ///Adding Delegate to Retreive the Fetched QR Code from Camera
+            qrOutput.setMetadataObjectsDelegate(qrDelegate, queue: .main)
+            session.commitConfiguration()
+            ///Note Session must Started on Background Thread
+            DispatchQueue.global(qos: .background).async {
+                session.startRunning()
+            }
+            activateScannerAnimation()
+        } catch {
+            presentError(error.localizedDescription)
+        }
+    }
+    
+    ///Presenting Error
+    func presentError(_ message: String) {
+        errorMessage = message
+        showError.toggle()
+    }
+    
 }
 
 //MARK: - PREVIEW
