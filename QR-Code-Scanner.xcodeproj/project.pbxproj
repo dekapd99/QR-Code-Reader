@@ -11,6 +11,8 @@
 		2A334B142AC295DD005CE4A2 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A334B132AC295DD005CE4A2 /* CameraView.swift */; };
 		2A334B172AC29C78005CE4A2 /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A334B162AC29C78005CE4A2 /* Permission.swift */; };
 		2AA339272AC2C528009DEE39 /* QRScannerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA339262AC2C528009DEE39 /* QRScannerDelegate.swift */; };
+		2AA339292AC3CA46009DEE39 /* RoomCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA339282AC3CA46009DEE39 /* RoomCode.swift */; };
+		2AA3392B2AC3D344009DEE39 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3392A2AC3D344009DEE39 /* HomeView.swift */; };
 		2AF5C87C2AC13CF800D36282 /* QR_Code_ScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5C87B2AC13CF800D36282 /* QR_Code_ScannerApp.swift */; };
 		2AF5C87E2AC13CF800D36282 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5C87D2AC13CF800D36282 /* ContentView.swift */; };
 		2AF5C8802AC13CF900D36282 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AF5C87F2AC13CF900D36282 /* Assets.xcassets */; };
@@ -22,6 +24,8 @@
 		2A334B132AC295DD005CE4A2 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		2A334B162AC29C78005CE4A2 /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		2AA339262AC2C528009DEE39 /* QRScannerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerDelegate.swift; sourceTree = "<group>"; };
+		2AA339282AC3CA46009DEE39 /* RoomCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomCode.swift; sourceTree = "<group>"; };
+		2AA3392A2AC3D344009DEE39 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		2AF5C8782AC13CF800D36282 /* QR-Code-Scanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "QR-Code-Scanner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AF5C87B2AC13CF800D36282 /* QR_Code_ScannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QR_Code_ScannerApp.swift; sourceTree = "<group>"; };
 		2AF5C87D2AC13CF800D36282 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -45,6 +49,7 @@
 			children = (
 				2A334B112AC28154005CE4A2 /* ScannerView.swift */,
 				2A334B132AC295DD005CE4A2 /* CameraView.swift */,
+				2AA3392A2AC3D344009DEE39 /* HomeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -54,6 +59,7 @@
 			children = (
 				2A334B162AC29C78005CE4A2 /* Permission.swift */,
 				2AA339262AC2C528009DEE39 /* QRScannerDelegate.swift */,
+				2AA339282AC3CA46009DEE39 /* RoomCode.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -169,6 +175,8 @@
 				2AF5C87E2AC13CF800D36282 /* ContentView.swift in Sources */,
 				2AF5C87C2AC13CF800D36282 /* QR_Code_ScannerApp.swift in Sources */,
 				2A334B142AC295DD005CE4A2 /* CameraView.swift in Sources */,
+				2AA339292AC3CA46009DEE39 /* RoomCode.swift in Sources */,
+				2AA3392B2AC3D344009DEE39 /* HomeView.swift in Sources */,
 				2AA339272AC2C528009DEE39 /* QRScannerDelegate.swift in Sources */,
 				2A334B172AC29C78005CE4A2 /* Permission.swift in Sources */,
 			);
